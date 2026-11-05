@@ -2,6 +2,8 @@ package com.pluralsight;
 
 import java.io.*;
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -9,6 +11,8 @@ public class FinancialTracker {
 
     private static final ArrayList<Transaction> transactions = new ArrayList<>();
     private static final String FILE_NAME = "transactions.csv";
+    public static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    public static final DateTimeFormatter TIME_FMT = DateTimeFormatter.ofPattern("ss:mm:HH");
 
     public static void main(String[] args) {
 
@@ -75,8 +79,8 @@ public class FinancialTracker {
 
                     Transaction transaction =
                             new Transaction(
-                                    parts[0],
-                                    parts[1],
+                                    LocalDate.parse(parts[0]),
+                                    LocalTime.parse(parts[1]),
                                     parts[2],
                                     parts[3],
                                     Double.parseDouble(parts[4]));
@@ -96,9 +100,13 @@ public class FinancialTracker {
 
         System.out.print("Date (yyyy-MM-dd): ");
         String date = scanner.nextLine();
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate userDate = LocalDate.parse(date, format);
 
         System.out.print("Time (HH:mm:ss): ");
         String time = scanner.nextLine();
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("HH:mm:ss");
+        LocalTime usertime = LocalTime.parse(time, fmt);
 
         System.out.print("Description: ");
         String description = scanner.nextLine();
@@ -111,7 +119,7 @@ public class FinancialTracker {
                 Double.parseDouble(scanner.nextLine());
 
         Transaction transaction =
-                new Transaction(date, time,
+                new Transaction(userDate, usertime,
                         description, vendor, amount);
 
         transactions.add(transaction);
@@ -125,9 +133,13 @@ public class FinancialTracker {
 
         System.out.print("Date (yyyy-MM-dd): ");
         String date = scanner.nextLine();
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate userDate = LocalDate.parse(date, format);
 
         System.out.print("Time (HH:mm:ss): ");
         String time = scanner.nextLine();
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("HH:mm:ss");
+        LocalTime usertime = LocalTime.parse(time, fmt);
 
         System.out.print("Description: ");
         String description = scanner.nextLine();
@@ -142,7 +154,7 @@ public class FinancialTracker {
         amount = -Math.abs(amount);
 
         Transaction transaction =
-                new Transaction(date, time,
+                new Transaction(userDate, usertime,
                         description, vendor, amount);
 
         transactions.add(transaction);
@@ -199,6 +211,10 @@ public class FinancialTracker {
                     displayPayments();
                     break;
 
+                case "R":
+                    reportsMenu(scanner);
+                    break;
+
                 case "H":
                     running = false;
                     break;
@@ -237,6 +253,24 @@ public class FinancialTracker {
 
             if (t.getAmount() < 0) {
                 System.out.println(t);
+            }
+        }
+    }
+
+    public static void reportsMenu(Scanner scanner){
+        boolean running = true;
+        while (running){
+            System.out.println("REPORTS");
+            System.out.println("Search by by vendor? ");
+            String choice = scanner.nextLine();
+
+            if (choice.equalsIgnoreCase("Y")){
+                System.out.println();//Ask who then check to see if the person they said match whats stored in the transcation class
+
+            }
+            else {
+                System.out.println("ok");
+                return;
             }
         }
     }
